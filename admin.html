@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body id="body">
+    <div style="margin-bottom:10px;">
+      <textarea id="json"></textarea>
+      <button id="jsonbtn">upload</button>
+    </div>
+    <div id="admin">
+
+    </div>
+
+    <script>
+      document.getElementById("jsonbtn").addEventListener("click", function(){
+        var json          = JSON.parse(document.getElementById('json').value);
+        var timeToTake    = json.time_to_take;
+        var steps         = json.steps;
+        var theSteps      = json.the_steps;
+        var result        = "";
+        var x;
+
+        for(x=0; timeToTake.length > x; x++){
+          result += "<div>";
+            result += "<div style='margin-bottom:10px;'>";
+              result += "Step Name: <input type='step' name='step' class='step' value='"+steps[x]+"' /> Time to take <input type='test' style='width:50px;' class='time' name='time' value='"+timeToTake[x]+"'/>% of time";
+                result += "<div style='margin:5px;' id="+x+">"
+                  result += "<button onclick='addStep("+x+")'>Add Step</button><br />";
+                  var n;
+                  for(n=0; theSteps[x].length > n; n++){
+                    result += "Step: <input type='text' class='theStep' data-step='"+x+"' name='step["+x+"]["+n+"]' value='"+theSteps[x][n]+"' /> <br />";
+                  }
+                result += "</div>";
+                result += "<hr />";
+            result += "</div>";
+          result += "</div>";
+        }
+
+        result += "<button onclick='update()'>Update</button>";
+
+        document.getElementById('admin').innerHTML = result;
+
+      });
+
+
+
+      function update(){
+        var steps           = document.getElementsByClassName("step");
+        var theSteps        = document.getElementsByClassName("theStep");
+        var time            = document.getElementsByClassName("time");
+        var stepsArray      = [];
+        var theStepsArray   = [];
+        var timesArray      = [];
+        var y;
+        var i;
+        var n;
+
+        //Create and populat array for main steps
+        for(y=0; steps.length > y; y++){
+          stepsArray.push(steps[y].value);
+        }
+
+        //Create and populat array for time
+        for(j=0; time.length > j; j++){
+          timesArray.push(time[j].value);
+        }
+
+        //Create sub attays for steps
+        for (var i = 0; i < theSteps.length; i++) {
+          var data = theSteps[i].dataset.step;
+          var na;
+          for(na = -1; na < data; na++){
+            theStepsArray[data] = [];
+          }
+        }
+
+        //Populat sub arrays
+        for(n=0; theSteps.length > n; n++){
+          var dataStep = theSteps[n].dataset.step;
+          theStepsArray[dataStep].push( theSteps[n].value );
+        }
+
+        var mainArray = [];
+        mainArray['time_to_take'] = timesArray;
+        mainArray['steps'] = stepsArray;
+        mainArray['the_steps'] = theStepsArray;
+
+        document.getElementById("body").innerHTML = "<textarea>"+multiDimensionArray2JSON(mainArray)+"</textarea>";
+
+
+      }
+
+      function addStep(x){
+        var div = document.getElementById(x);
+        div.innerHTML += "Step: <input type='text' class='theStep' data-step='"+x+"' name='step["+x+"]'  /> <br />";
+      }
+
+      function multiDimensionArray2JSON(thearray){
+       var output = '';
+       var opentag = '';
+       var closetag ='';
+
+       /* Only process if user input is an array */
+       if (thearray instanceof Array)
+       {
+           var arraykey = [];
+           var keyneeded = false;
+
+           /* Get the key, if the key is non numeric then will output
+            * the key */
+           for (var key in thearray)
+           {
+               if (thearray[key] != undefined)
+               {
+                   arraykey.push(key);
+                   if (!/^[0-9]*$/.test(key))
+                   {
+                       keyneeded = true;
+                   }
+               }
+           }
+
+           /* use difference tag for associate array */
+           if (keyneeded)
+           {
+               opentag = '{';
+               closetag ='}';
+           }
+           else
+           {
+               opentag = '[';
+               closetag =']';
+           }
+
+           output += opentag;
+
+           for (var i = 0; i < arraykey.length; i++)
+           {
+               /* insert key */
+               if (keyneeded)
+               {
+                   output += '"'+arraykey[i]+'":';
+               }
+
+               /* if sub node still a array then process it */
+               if (thearray[arraykey[i]] instanceof Array)
+               {
+                   output += multiDimensionArray2JSON(thearray[arraykey[i]]);
+               }
+               else
+               {
+                   /* if string, quoate it */
+                   if (typeof thearray[arraykey[i]] == 'string')
+                   {
+                       output += '"'+thearray[arraykey[i]].replace(/\n/, '\\n').replace(/\r/, '\\r')+'"';
+                   }
+                   else
+                   {
+                       output += thearray[arraykey[i]];
+                   }
+               }
+
+               /* end of element, terminate it */
+               if ((i+1) != arraykey.length)
+               {
+                   output += ',';
+               }
+           }
+           output += closetag;
+       }
+       else
+       {
+           output += '"'+thearray+'"';
+       }
+
+       return output;
+   }
+    </script>
+  </body>
+</html>
