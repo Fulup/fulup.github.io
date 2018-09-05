@@ -164,6 +164,7 @@
             var timeToTake        = data.time_to_take;
             var steps             = data.steps;
             var theSteps          = data.the_steps;
+			var link          	  = data.link;
 
             var stepsLoop         = 0;
             var numberOfSteps     = 5;
@@ -192,6 +193,7 @@
             }
 
             if(error == false){
+			   alert(link);
               result += "<button id='restart' onclick='restart()'>Restart</button>"
 
               document.getElementById("result").innerHTML = result;
