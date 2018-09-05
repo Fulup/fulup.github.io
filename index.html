@@ -193,7 +193,10 @@
             }
 
             if(error == false){
-			  alert(link);
+			  if(typeof link !== "undefined"){
+			     alert(link);
+			  }
+			 
               result += "<button id='restart' onclick='restart()'>Restart</button>"
 
               document.getElementById("result").innerHTML = result;
