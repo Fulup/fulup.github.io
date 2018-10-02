@@ -171,8 +171,6 @@
             var numberOfDays      = Date.daysBetween(assignmentStart, assignmentEnd);
             /*var daysPerStep       = Math.round(numberOfDays/numberOfSteps); */
 
-			console.log(numberOfDays);
-
             for(stepsLoop; steps.length > stepsLoop; stepsLoop++){
               var stepDays      = Math.round(timeToTake[stepsLoop]/numberOfDays);
               var stepNumber    = stepsLoop + 1;
@@ -180,6 +178,8 @@
               var timeStamp     = new Date(completeBy);
               var theStepsLoop  = 0;
               var theStepsHTML  = "";
+			  
+			  console.log(stepDays);
 
               for(theSteps[stepsLoop]; theSteps[stepsLoop].length > theStepsLoop; theStepsLoop++){
                 theStepsHTML += "<li>"+theSteps[stepsLoop][theStepsLoop]+"</li>";
