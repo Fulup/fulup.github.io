@@ -16,12 +16,17 @@
     <script>
       document.getElementById("jsonbtn").addEventListener("click", function(){
         var json          = JSON.parse(document.getElementById('json').value);
-        var timeToTake    = json.time_to_take;
+        var link    	  = json.link;
+		var timeToTake    = json.time_to_take;
         var steps         = json.steps;
         var theSteps      = json.the_steps;
         var result        = "";
         var x;
-
+		
+		result += "<div>";
+			result += "Link: <input type='text' id='link' value='"+link+"' />";
+		result += "</div>";
+		result += "<br /><br />";
         for(x=0; timeToTake.length > x; x++){
           result += "<div>";
             result += "<div style='margin-bottom:10px;'>";
@@ -50,6 +55,7 @@
         var steps           = document.getElementsByClassName("step");
         var theSteps        = document.getElementsByClassName("theStep");
         var time            = document.getElementsByClassName("time");
+		var link            = document.getElementById("link").value;
         var stepsArray      = [];
         var theStepsArray   = [];
         var timesArray      = [];
@@ -83,6 +89,7 @@
         }
 
         var mainArray = [];
+		mainArray['link'] = link;
         mainArray['time_to_take'] = timesArray;
         mainArray['steps'] = stepsArray;
         mainArray['the_steps'] = theStepsArray;
